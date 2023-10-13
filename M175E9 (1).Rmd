@@ -1,0 +1,173 @@
+---
+title: ''
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### MAT 175 Fall 2023
+\vspace*{-0.2in}
+### Exercise #9
+
+\bigskip
+
+In this exercise we are going to work on keeping code and data organized (chs. 39, 40, and 5) from the text).
+
+\textbf{40.1} \quad Whenever starting something new in RStudio, instead of just creating a new script or markdown file, I prefer using a `Project`. A project is a way to keep all components of a data analysis project (data, scripts, markdown files, README files, etc.) in one folder. If you setup a project, by default any files you create or work on will be saved to that project folder.
+
+For example, on my machine, I have a MAT175 folder that includes separate projects for your homework assignments, in-class exercises, etc. 
+
+Your text describes the procedure for starting a project in section 40.1. *Try setting up your own MAT175 project.*
+
+If I were you I would move all of my MAT175 associated files into that project.
+
+\textbf{39} \quad If I know that I am going to be working on a project that will be large, have many versions, involve collaborates, or I will want to share with potential employers, then I will set it up first as a GitHub repository.
+
+Git is a version control system that you run on your own machine. GitHub is a Git repository hosting service. It’s been said that GitHub is to Git what Facebook is to your actual face. In short, GitHub does the version control stuff of Git but also allows you to share projects with collaborators or employers.
+
+So, let's start this process by having you *create a Github account*: [here](https://github.com/). It is a pretty straightforward process but is also described in your book: section 39.2.
+
+The next step is linking your computer to your Github account. Your text recommends doing this by downloading Git and connecting directly through RStudio. However, I like using GitHub Desktop (download [here](https://docs.github.com/en/desktop/installing-and-authenticating-to-github-desktop/installing-github-desktop)).
+
+GitHub desktop allows you to create Git repositories and link them with GitHub, and it allows you to do so with any IDE or programming language, not just RStudio. I like GitHub Desktop because it has broader use.
+
+We will go through the steps of producing a repository that will ALSO be a folder for an RStudio project, and the process of "cloning" repositories, and "pushing" and "pulling" code updates between RStudio and GitHub. Your text goes into detail about this process in ch. 39. I highly suggest you read through the procedure.
+
+Here is a (link)[https://docs.github.com/en/desktop] with more detail on GitHub Desktop.
+
+*Your goal at the end of this section will be to have 1) a GitHub account, 2) a repository/R project with a script or RMarkdown file in it, 3) practiced pushing and pulling updated repos.*
+
+This will be very useful if you choose to work with a partner on your midterm project!
+
+
+\bigskip
+
+\bigskip
+
+\textbf{5.1} \quad You need to know where your datafiles are, and you need to know how to get to that location using RStudio. If you organize your RStudio usage into projects, like previously described, this should be quite straightforward. Unfortunately, this is not always the case and different computer systems have different ways to indicate a path, so you will have to know the system you are using.
+
+The path of a file is a list of directory names that can be thought of as instructions on what folders to click on, and in what order, to find the file. If these instructions are for finding the file from the root directory we refer to it as the full path. If the instructions are for finding the file starting in the working directory we refer to it as a relative path. 
+
+```{r}
+#path to dslabs package:
+system.file(package = "dslabs")
+```
+
+This path is going to be unique to your computer. So, the book recommends that you use relative paths because that makes the code more portable.
+
+For example, this is how I would use a full path to upload the `exams.rda` dataset into RStudio on my computer. If you try and run the code on your computer, you will get an error saying "No such file or directory".
+
+```{r}
+load("C:/Users/ahoward1/Documents/MAT 175 - Intro to Data Science - Fall 2023/Exercises/exams.rda")
+```
+
+Instead, if I use the relative path to my working directory, and assuming the dataset is also in your working directory, the below code should work on both of our machines.
+
+```{r}
+dir <- getwd()
+load(file.path(dir,"exams.rda"))
+```
+
+You can change the working directory with the function 'setwd()`.
+
+Move your `exams.rda' dataset to some other location (drag and drop if need be) and try to load it to your session. Use relative paths if at all possible.
+
+```{r}
+# Write your code here. 
+# Remember to use quote marks "_"
+```
+
+\bigskip
+
+\textbf{5.2} \quad It's not likely that your datafile is already in R dataframe format. You will have to convert it to a form that R can work with. We will first assume that the datafile is a simple text file, not in a proprietary format like Microsoft Excel. In this case, there are several tools you can use: base R has `read.table`, `read.csv`, `read.delim` and so on. We will use the `readr` package, which is part of `tidyverse`. See section 5.2 for a list of functions that we can use. You will use the `read_csv` often, since comma-separated datafiles are pretty common. 
+
+In order to use `read_csv()` we need to load the `readr` package. The larger `tidyverse` package includes `readr`, so we can load that instead. 
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+The first thing to do is to look at the file. If necessary, you can edit the file; for example, if there are explanatory text that is not part of the data, you should edit it out. I suggest you look at the file using your computer's text editor, but you can also use the `read_lines` function to take a look.
+
+```{r}
+# The following function shows the first 10 lines of the file.
+# read_lines("path to the file", n_max=10)
+```
+
+\bigskip
+
+*There should be a `AllCountries.csv` file on Canvas. Download it, put it somewhere, take a look at it, and then use the `read_csv` function to load it into R.*
+
+\bigskip
+
+```{r}
+# Write your commands here.
+# You should give the file a name, like `countries`.
+```
+
+
+*Exercise: find the five most populous countries.*
+
+\bigskip
+
+```{r}
+# Write your code here.
+# Remember `arrange` and maybe `select` also.
+```
+
+\bigskip
+
+*If you look carefully at the original file, you should note that there are empty cells, indicating missing data. What happens to these empty cells after you import the data into R?*
+
+\bigskip
+
+\bigskip
+
+Beside plain text files, it is also very common to encounter data in the form of Microsoft Excel files. They are so common that there are packages built to read Excel files directly. (Excel can save files to `.csv` format, so even without these packages, we can still load Excel files into R.) Be warned: Excel files can contain complicated functions and formatting, so the import into R can be problematic. 
+
+We will use the `readxl` package, so we first load it.
+
+```{r}
+library(readxl)
+```
+
+The book lists several functions to read Excel files. The most recent is `read_xlsx` which can be used to read the most recent type of Excel format. 
+
+\bigskip
+
+*Exercise: There should also be an Excel file called `AllCountries` in Canvas. Download that, put it somewhere on your computer, and then load it to your workspace using one of the read excel functions. Compare it with what you get when you load the `.csv` file. Are they the same?*
+
+```{r}
+# Write your code here.
+```
+
+\bigskip
+
+We should be able to export R data to a plain text format so that others who don't use R can still have access to the data. (Even plain text can have complications: there are ASCII, UTF-8, UTF-16, and other text encodings.) The function to do this is `write_csv()` (or `write_delim`, or `write_tsv`, etc). The basic usage is `write_csv(x,path)` where `x` is the name of an R dataframe (or tibble) and `path` is your intended location of the exported file, including its name. The default path is your working directory.
+
+\bigskip
+
+*Try out the `write_csv` function on an R dataset, for example, on the `exams` dataframe. Don't forget to `load` the exams dataset into your workspace first. Check that the function works.*
+
+```{r}
+# Write your code here.
+```
+
+\bigskip
+
+*Here are some more exercises about manipulating dataframes. You should have the `AllCountries` dataframe in your R session by now. Try doing the following things (these are separate tasks):*
+
+*- add a new column `density` which shows the number of people per sq kilometer. Then find the top 10 densest countries. Also the 10 least dense countries.*
+
+*- construct a new dataframe that consists only of health-related data. (Of course, you should include the name of the countries too.)*
+
+*- some of the data are missing. For example, the variable `Developed` classifies countries into categories 1, 2, or 3. (What are they?) But not all countries are included. Dominica, for example, does not have a classification. Construct a dataframe that includes only countries that are classified and also where we know the percentage of the elderly population.* 
+
+*- continuation of the previous exercise. Compare the average percent of elderly population among the three different types of countries.*
+
+*- add a new column which essentially replaces `1` in the `Developed` column by "least developed",`2` by "developing', and `3` by "developed".* 
